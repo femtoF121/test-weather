@@ -2,9 +2,13 @@
 
 @theme {
   --font-nunito: "Nunito", sans-serif;
+  --color-theme-1: var(--color1);
+  --color-theme-2: var(--color2);
 }
 
 :root {
+  --color1: gray;
+  --color2: gray;
   font-family: "Nunito", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -12,17 +16,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  /* background: no-repeat
-    linear-gradient(140deg, rgb(12, 71, 94) 0%, rgb(45, 122, 111) 100%); */
-  min-height: 100vh;
-  @apply bg-gray-100;
-}
-
 button {
-  cursor: pointer;
+  @apply cursor-pointer rounded-lg border border-theme-1 text-theme-1 hover:bg-theme-1 hover:text-white transition-colors;
 }
 
-.icon-button {
-  @apply rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 transition-colors w-fit;
+input {
+  @apply border border-theme-1 focus:outline-theme-1 rounded-lg;
 }
