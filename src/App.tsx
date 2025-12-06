@@ -4,7 +4,7 @@ import { fetchWeatherByCity } from "./api";
 import CityNamePanel from "./components/CityNamePanel";
 import ForecastInfo from "./components/ForecastInfo";
 import SkeletonLoader from "./components/SkeletonLoader";
-import { DefaultColors, WetherColors } from "./constants/theme";
+import { DefaultColors, WeatherColors } from "./constants/theme";
 import { useCachedFetch } from "./hooks/useCachedFetch";
 import { WeatherResponse } from "./types/api";
 import { WhetherTheme } from "./types/theme";
@@ -29,7 +29,7 @@ const App = () => {
       );
     };
 
-    if (data) changeTheme(WetherColors[data.weather[0].main]);
+    if (data) changeTheme(WeatherColors[data.weather[0].main]);
     else changeTheme(DefaultColors);
   }, [data]);
 

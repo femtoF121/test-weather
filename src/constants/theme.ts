@@ -7,7 +7,7 @@ export const DefaultColors: WhetherTheme = {
   type: "radial",
 };
 
-export const WetherColors: Record<WeatherMain, WhetherTheme> = {
+export const WeatherColors: Record<WeatherMain, WhetherTheme> = {
   Clear: {
     color1: "#FFBC70",
     color2: "#FFF6D3",
@@ -32,8 +32,8 @@ export const WetherColors: Record<WeatherMain, WhetherTheme> = {
     degree: "238deg",
   },
   Snow: {
-    color1: "#FFFFFF",
-    color2: "#D0D0D0",
+    color1: "#D0D0D0",
+    color2: "#FFFFFF",
     type: "linear",
     degree: "135deg",
   },
