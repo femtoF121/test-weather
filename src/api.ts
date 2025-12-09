@@ -1,6 +1,6 @@
 import { CitiesResponse, WeatherResponse } from "./types/api";
 
-const API_KEY = "eaf690d8c718fd9e8069954a4337495e";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const fetchCities = async (city: string): Promise<CitiesResponse> => {
   const res = await fetch(

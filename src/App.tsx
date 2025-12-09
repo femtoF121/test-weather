@@ -7,7 +7,7 @@ import SkeletonLoader from "./components/SkeletonLoader";
 import { DefaultColors, WeatherColors } from "./constants/theme";
 import { useCachedFetch } from "./hooks/useCachedFetch";
 import { WeatherResponse } from "./types/api";
-import { WhetherTheme } from "./types/theme";
+import { WeatherTheme } from "./types/theme";
 
 const App = () => {
   const [city, setCity] = useState("");
@@ -19,7 +19,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    const changeTheme = (theme: WhetherTheme) => {
+    const changeTheme = (theme: WeatherTheme) => {
       document.documentElement.style.setProperty("--color1", theme.color1);
       document.documentElement.style.setProperty("--color2", theme.color2);
       setBackground(
