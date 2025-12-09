@@ -17,7 +17,24 @@ const AutoComplete: FC<AutoCompleteProps> = ({
   const [data, setData] = useState<CitiesResponse | null>(null);
 
   useEffect(() => {
-    if (value) fetchCities(value).then((res) => setData(res));
+    if (!value) return;
+
+    let isMounted = true;
+
+    fetchCities(value)
+      .then((res) => {
+        if (!isMounted) return;
+        setData(res);
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error("Failed to fetch cities", err);
+        setData(null);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [value]);
 
   if (!value || !data || data.length <= 0) return null;

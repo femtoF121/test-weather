@@ -18,6 +18,8 @@ const App = () => {
     city
   );
 
+  console.log("first");
+
   useEffect(() => {
     const changeTheme = (theme: WeatherTheme) => {
       document.documentElement.style.setProperty("--color1", theme.color1);
