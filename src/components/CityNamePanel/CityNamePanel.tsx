@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import clsx from "clsx";
-import { ComponentProps, FC } from "react";
-import AutoComplete from "./AutoComplete";
-
-interface CityNamePanelProps extends ComponentProps<"div"> {
-  setCity: (city: string) => void;
-}
+import { FC } from "react";
+import AutoComplete from "../AutoComplete/AutoComplete";
+import { CityNamePanelProps } from "./CityNamePanel.type";
 
 const CityNamePanel: FC<CityNamePanelProps> = ({
   setCity,
@@ -26,11 +23,14 @@ const CityNamePanel: FC<CityNamePanelProps> = ({
     };
   }, [value]);
 
-  const handleSetCity = (city: string) => {
-    setValue("");
-    setDebouncedValue("");
-    setCity(city);
-  };
+  const handleSetCity = useCallback(
+    (city: string) => {
+      setValue("");
+      setDebouncedValue("");
+      setCity(city);
+    },
+    [setCity]
+  );
 
   return (
     <div

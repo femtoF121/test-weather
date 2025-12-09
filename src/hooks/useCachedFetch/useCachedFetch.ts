@@ -1,17 +1,20 @@
 import { getFromCache, setCache } from "@/utils/cache";
 import { useEffect, useRef, useState } from "react";
+import {
+  useCachedFetchProps,
+  useCachedFetchReturn,
+} from "./useCachedFetch.type";
 
 export function useCachedFetch<DataT>(
-  queryFn: () => Promise<DataT>,
-  key: string,
-  ttl = 10 * 60 * 1000
-): { data: DataT | null; loading: boolean; error: boolean } {
+  props: useCachedFetchProps<DataT>
+): useCachedFetchReturn<DataT> {
+  const { queryFn, key, ttl = 5 * 60 * 1000, enabled = true } = props;
   const [data, setData] = useState<DataT | null>(() => {
     const cached = getFromCache<DataT>(key, ttl);
     if (cached) return cached;
     return null;
   });
-  const [loading, setLoading] = useState(null === data);
+  const [loading, setLoading] = useState(enabled ? null === data : false);
   const [error, setError] = useState(false);
   const queryFnRef = useRef(queryFn);
 
@@ -20,6 +23,8 @@ export function useCachedFetch<DataT>(
   }, [queryFn]);
 
   useEffect(() => {
+    if (!enabled) return;
+
     let isMounted = true;
 
     const fetchWithCache = async () => {
@@ -52,7 +57,7 @@ export function useCachedFetch<DataT>(
     return () => {
       isMounted = false;
     };
-  }, [key, ttl]);
+  }, [key, ttl, enabled]);
 
   return { data, loading, error };
 }

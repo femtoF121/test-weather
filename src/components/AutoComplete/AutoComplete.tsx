@@ -1,12 +1,8 @@
+import { fetchCities, getFlagUrl } from "@/api";
 import { CitiesResponse } from "@/types/api";
 import clsx from "clsx";
-import { ComponentProps, FC, useEffect, useState } from "react";
-import { fetchCities, getFlagUrl } from "../api";
-
-interface AutoCompleteProps extends ComponentProps<"div"> {
-  value: string;
-  onItemClick: (city: string) => void;
-}
+import { FC, useEffect, useState } from "react";
+import { AutoCompleteProps } from "./AutoComplete.type";
 
 const AutoComplete: FC<AutoCompleteProps> = ({
   value,
