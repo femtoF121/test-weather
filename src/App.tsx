@@ -14,7 +14,7 @@ const App = () => {
   const [city, setCity] = useState("");
 
   const { data, loading, error } = useCachedFetch<WeatherResponse>({
-    queryFn: () => fetchWeatherByCity(city),
+    queryFn: (signal) => fetchWeatherByCity(city, signal),
     key: city,
     enabled: !!city,
   });

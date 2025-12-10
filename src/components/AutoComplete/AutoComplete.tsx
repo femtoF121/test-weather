@@ -16,8 +16,9 @@ const AutoComplete: FC<AutoCompleteProps> = ({
     if (!value) return;
 
     let isMounted = true;
+    const controller = new AbortController();
 
-    fetchCities(value)
+    fetchCities(value, controller.signal)
       .then((res) => {
         if (!isMounted) return;
         setData(res);
@@ -30,6 +31,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, [value]);
 

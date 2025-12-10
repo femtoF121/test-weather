@@ -2,9 +2,13 @@ import { CitiesResponse, WeatherResponse } from "./types/api";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-export const fetchCities = async (city: string): Promise<CitiesResponse> => {
+export const fetchCities = async (
+  city: string,
+  signal?: AbortSignal
+): Promise<CitiesResponse> => {
   const res = await fetch(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`,
+    { signal }
   );
 
   if (!res.ok) throw new Error("Something went wrong");
@@ -13,10 +17,12 @@ export const fetchCities = async (city: string): Promise<CitiesResponse> => {
 };
 
 export const fetchWeatherByCity = async (
-  city: string
+  city: string,
+  signal?: AbortSignal
 ): Promise<WeatherResponse> => {
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`,
+    { signal }
   );
 
   if (!res.ok) throw new Error("Something went wrong");

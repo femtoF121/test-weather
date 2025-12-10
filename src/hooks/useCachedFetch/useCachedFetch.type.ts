@@ -1,5 +1,5 @@
 export interface useCachedFetchProps<DataT> {
-  queryFn: () => Promise<DataT>;
+  queryFn: (signal: AbortSignal) => Promise<DataT>;
   key: string;
   ttl?: number;
   enabled?: boolean;
