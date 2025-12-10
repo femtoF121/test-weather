@@ -1,37 +1,28 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchWeatherByCity } from "./api";
-import CityNamePanel from "./components/CityNamePanel";
-import ForecastInfo from "./components/ForecastInfo";
-import SkeletonLoader from "./components/SkeletonLoader";
-import { DefaultColors, WetherColors } from "./constants/theme";
-import { useCachedFetch } from "./hooks/useCachedFetch";
+import { RootState } from "./app/store";
+import CityNamePanel from "./components/CityNamePanel/CityNamePanel";
+import ForecastInfo from "./components/ForecastInfo/ForecastInfo";
+import EmptyState from "./components/HomePageStates/EmptyState/EmptyState";
+import ErrorState from "./components/HomePageStates/ErrorState/ErrorState";
+import LoadingState from "./components/HomePageStates/LoadingState/LoadingState";
+import { setCity } from "./features/weather/weatherSlice";
+import { useCachedFetch } from "./hooks/useCachedFetch/useCachedFetch";
+import { useTheme } from "./hooks/useTheme/useTheme";
 import { WeatherResponse } from "./types/api";
-import { WhetherTheme } from "./types/theme";
 
 const App = () => {
-  const [city, setCity] = useState("");
-  const [background, setBackground] = useState(DefaultColors.color1);
+  const city = useSelector((state: RootState) => state.weather.city);
+  const dispatch = useDispatch();
 
-  const { data, loading, error } = useCachedFetch<WeatherResponse>(
-    () => fetchWeatherByCity(city),
-    city
-  );
+  const { data, loading, error } = useCachedFetch<WeatherResponse>({
+    queryFn: (signal) => fetchWeatherByCity(city, signal),
+    key: city,
+    enabled: !!city,
+  });
 
-  useEffect(() => {
-    const changeTheme = (theme: WhetherTheme) => {
-      document.documentElement.style.setProperty("--color1", theme.color1);
-      document.documentElement.style.setProperty("--color2", theme.color2);
-      setBackground(
-        `${theme.type}-gradient(${theme.degree ? theme.degree + ", " : ""}${
-          theme.color1
-        }, ${theme.color2})`
-      );
-    };
-
-    if (data) changeTheme(WetherColors[data.weather[0].main]);
-    else changeTheme(DefaultColors);
-  }, [data]);
+  const { background } = useTheme(data?.weather[0].main || null);
 
   return (
     <div
@@ -42,19 +33,15 @@ const App = () => {
     >
       <div className="mx-auto max-w-[860px] bg-white p-8 px-10 rounded-xl shadow-md relative text-2xl">
         <CityNamePanel
-          setCity={setCity}
+          setCity={(city) => dispatch(setCity(city))}
           className={clsx(error || !city ? "mb-6" : "mb-10")}
         />
         {city === "" ? (
-          <div className="text-center ">
-            Please enter a city name to get forecast.
-          </div>
+          <EmptyState />
         ) : error ? (
-          <div className="text-center ">
-            Error fetching weather data. Please try again.
-          </div>
+          <ErrorState />
         ) : loading || !data ? (
-          <SkeletonLoader />
+          <LoadingState />
         ) : (
           <ForecastInfo data={data} />
         )}

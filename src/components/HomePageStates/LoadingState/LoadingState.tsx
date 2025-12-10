@@ -1,4 +1,4 @@
-const SkeletonLoader = () => {
+const LoadingState = () => {
   return (
     <div
       role="status"
@@ -15,4 +15,4 @@ const SkeletonLoader = () => {
   );
 };
 
-export default SkeletonLoader;
+export default LoadingState;
