@@ -1,17 +1,20 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchWeatherByCity } from "./api";
+import { RootState } from "./app/store";
 import CityNamePanel from "./components/CityNamePanel/CityNamePanel";
 import ForecastInfo from "./components/ForecastInfo/ForecastInfo";
 import EmptyState from "./components/HomePageStates/EmptyState/EmptyState";
 import ErrorState from "./components/HomePageStates/ErrorState/ErrorState";
 import LoadingState from "./components/HomePageStates/LoadingState/LoadingState";
+import { setCity } from "./features/weather/weatherSlice";
 import { useCachedFetch } from "./hooks/useCachedFetch/useCachedFetch";
 import { useTheme } from "./hooks/useTheme/useTheme";
 import { WeatherResponse } from "./types/api";
 
 const App = () => {
-  const [city, setCity] = useState("");
+  const city = useSelector((state: RootState) => state.weather.city);
+  const dispatch = useDispatch();
 
   const { data, loading, error } = useCachedFetch<WeatherResponse>({
     queryFn: (signal) => fetchWeatherByCity(city, signal),
@@ -30,7 +33,7 @@ const App = () => {
     >
       <div className="mx-auto max-w-[860px] bg-white p-8 px-10 rounded-xl shadow-md relative text-2xl">
         <CityNamePanel
-          setCity={setCity}
+          setCity={(city) => dispatch(setCity(city))}
           className={clsx(error || !city ? "mb-6" : "mb-10")}
         />
         {city === "" ? (

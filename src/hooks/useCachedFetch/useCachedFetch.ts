@@ -1,5 +1,8 @@
-import { getFromCache, setCache } from "@/utils/cache";
+import { RootState } from "@/app/store";
+import { setCacheEntry } from "@/features/cache/cacheSlice";
+import { getFromCache } from "@/utils/cache";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useCachedFetchProps,
   useCachedFetchReturn,
@@ -9,8 +12,10 @@ export function useCachedFetch<DataT>(
   props: useCachedFetchProps<DataT>
 ): useCachedFetchReturn<DataT> {
   const { queryFn, key, ttl = 5 * 60 * 1000, enabled = true } = props;
+  const cache = useSelector((state: RootState) => state.cache);
+  const dispatch = useDispatch();
   const [data, setData] = useState<DataT | null>(
-    enabled ? getFromCache<DataT>(key, ttl) : null
+    enabled ? getFromCache<DataT>(cache, key, ttl) : null
   );
   const [loading, setLoading] = useState(enabled ? null === data : false);
   const [error, setError] = useState(false);
@@ -27,11 +32,11 @@ export function useCachedFetch<DataT>(
     const controller = new AbortController();
 
     const fetchWithCache = async () => {
-      const cached = getFromCache<DataT>(key, ttl);
-      if (cached) return cached;
+      const cacheEntry = getFromCache<DataT>(cache, key, ttl);
+      if (cacheEntry) return cacheEntry;
 
       const result = await queryFnRef.current(controller.signal);
-      setCache(key, result);
+      dispatch(setCacheEntry({ key, data: result }));
 
       return result;
     };
@@ -57,7 +62,7 @@ export function useCachedFetch<DataT>(
       controller.abort();
       isMounted = false;
     };
-  }, [key, ttl, enabled]);
+  }, [key, ttl, enabled, dispatch]);
 
   return { data, loading, error };
 }
